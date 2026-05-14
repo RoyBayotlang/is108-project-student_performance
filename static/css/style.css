@@ -1,0 +1,293 @@
+/* ============================================================
+   style.css  –  Custom overrides on top of Bootstrap 5 dark theme
+   IS 108  |  Student Performance Prediction App
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ── Root variables ─────────────────────────────────────────── */
+:root {
+  --bs-body-font-family: 'Inter', sans-serif;
+  --accent-blue  : #3b82f6;
+  --accent-green : #10b981;
+  --accent-red   : #ef4444;
+  --accent-yellow: #f59e0b;
+  --card-bg      : #1e293b;
+  --body-bg      : #0f172a;
+  --border-color : #334155;
+  --text-muted   : #94a3b8;
+}
+
+/* ── Base ───────────────────────────────────────────────────── */
+body {
+  background-color: var(--body-bg);
+  color: #f1f5f9;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ── Navbar ─────────────────────────────────────────────────── */
+.navbar {
+  background-color: #0d1b2e !important;
+  border-bottom: 1px solid var(--border-color);
+}
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -0.3px;
+}
+.navbar-brand span {
+  color: var(--accent-blue);
+}
+
+/* ── Tab Navigation ─────────────────────────────────────────── */
+.nav-tabs {
+  border-bottom: 1px solid var(--border-color);
+  background-color: #0d1b2e;
+  padding: 0 1.5rem;
+  gap: 0.25rem;
+}
+.nav-tabs .nav-link {
+  color: var(--text-muted);
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  padding: 0.85rem 1.1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: color 0.2s, border-color 0.2s;
+}
+.nav-tabs .nav-link:hover {
+  color: #f1f5f9;
+  border-color: transparent;
+}
+.nav-tabs .nav-link.active {
+  color: var(--accent-blue);
+  border-bottom: 2px solid var(--accent-blue);
+  background: transparent;
+}
+
+/* ── Cards ──────────────────────────────────────────────────── */
+.card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+}
+.card-header {
+  background-color: rgba(255,255,255,0.04);
+  border-bottom: 1px solid var(--border-color);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* ── Stat cards ─────────────────────────────────────────────── */
+.stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+.stat-value { font-size: 1.6rem; font-weight: 700; line-height: 1; }
+.stat-label { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+
+/* ── Workflow Steps ─────────────────────────────────────────── */
+.workflow-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.75rem 0;
+}
+.step-num {
+  width: 32px;
+  height: 32px;
+  background: var(--accent-blue);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+.step-content h6 { margin: 0; font-size: 0.9rem; font-weight: 600; }
+.step-content p  { margin: 2px 0 0; font-size: 0.8rem; color: var(--text-muted); }
+
+/* ── Table ──────────────────────────────────────────────────── */
+.table-wrapper {
+  overflow-x: auto;
+  max-height: 420px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+.table {
+  font-size: 0.8rem;
+  margin-bottom: 0;
+}
+.table thead th {
+  background-color: #162032;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  white-space: nowrap;
+  border-color: var(--border-color);
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.table tbody td {
+  border-color: var(--border-color);
+  color: #e2e8f0;
+}
+.table-striped>tbody>tr:nth-of-type(odd)>* {
+  background-color: rgba(255,255,255,0.025);
+}
+.table-hover>tbody>tr:hover>* {
+  background-color: rgba(59,130,246,0.08);
+}
+
+/* ── Preprocessing steps ────────────────────────────────────── */
+.prep-step {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.prep-step .step-icon { font-size: 1.5rem; width: 36px; text-align: center; }
+.prep-step .step-info { flex: 1; }
+.prep-step .step-info h6 { margin: 0; font-size: 0.875rem; font-weight: 600; }
+.prep-step .step-info p  { margin: 2px 0 0; font-size: 0.78rem; color: var(--text-muted); }
+.prep-step .step-badge   { flex-shrink: 0; }
+
+/* ── Model cards ─────────────────────────────────────────────── */
+.model-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  height: 100%;
+}
+.model-card h5 { font-weight: 700; margin-bottom: 0.25rem; }
+.model-param {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-muted);
+}
+.model-param:last-of-type { border-bottom: none; }
+.model-param span:last-child { color: #f1f5f9; font-weight: 500; }
+
+/* ── Metric badges ──────────────────────────────────────────── */
+.metric-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+.metric-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── Confusion matrix ───────────────────────────────────────── */
+.cm-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  max-width: 180px;
+  margin: 0 auto;
+}
+.cm-cell {
+  padding: 0.75rem;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.cm-tp { background: rgba(16,185,129,0.2); color: #10b981; }
+.cm-tn { background: rgba(16,185,129,0.2); color: #10b981; }
+.cm-fp { background: rgba(239,68,68,0.2);  color: #ef4444; }
+.cm-fn { background: rgba(239,68,68,0.2);  color: #ef4444; }
+.cm-label {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 2px;
+}
+
+/* ── Predict form ───────────────────────────────────────────── */
+.form-control, .form-select {
+  background-color: #162032;
+  border-color: var(--border-color);
+  color: #f1f5f9;
+  font-size: 0.875rem;
+}
+.form-control:focus, .form-select:focus {
+  background-color: #162032;
+  border-color: var(--accent-blue);
+  color: #f1f5f9;
+  box-shadow: 0 0 0 0.2rem rgba(59,130,246,0.25);
+}
+.form-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+.form-select option { background-color: #1e293b; }
+
+/* ── Prediction result cards ────────────────────────────────── */
+.result-card {
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+}
+.result-pass { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.4); }
+.result-fail { background: rgba(239,68,68,0.15);  border: 1px solid rgba(239,68,68,0.4); }
+.result-label { font-size: 1.5rem; font-weight: 700; }
+
+/* ── Utility ─────────────────────────────────────────────────── */
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+.section-sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+.loading-spinner { display: none; }
+.badge-blue   { background: rgba(59,130,246,0.2); color: var(--accent-blue); }
+.badge-green  { background: rgba(16,185,129,0.2); color: var(--accent-green); }
+
+/* ── Best model highlight ───────────────────────────────────── */
+.best-model { border: 2px solid var(--accent-blue) !important; }
+
+/* ── Scrollbar ──────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0f172a; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+/* ── Tab content transition ─────────────────────────────────── */
+.tab-pane { animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
