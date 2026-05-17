@@ -163,55 +163,35 @@
 
   <!-- ── TRAINING ────────────────────────────────────────────────────────────── -->
   <div class="tab-pane fade" id="pane-train">
-    <div class="row g-3 mb-3">
-      <div class="col-12"><h4 class="section-title mb-0">🤖 Model Training</h4><p class="section-sub">Train KNN, SVM, and ANN classifiers on the student dataset.</p></div>
-    </div>
-    <!-- Model info cards -->
     <div class="row g-3 mb-4">
-      <div class="col-md-4">
-        <div class="model-card">
-          <h5 class="text-primary">🔵 KNN</h5>
-          <p class="text-muted" style="font-size:.8rem;">K-Nearest Neighbors</p>
-          <div class="model-param"><span>Algorithm</span><span>KNN</span></div>
-          <div class="model-param"><span>K Neighbors</span><span>5</span></div>
-          <div class="model-param"><span>Distance</span><span>Euclidean</span></div>
-          <div class="model-param"><span>Weights</span><span>Uniform</span></div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="model-card">
-          <h5 class="text-warning">🟡 SVM</h5>
-          <p class="text-muted" style="font-size:.8rem;">Support Vector Machine</p>
-          <div class="model-param"><span>Kernel</span><span>RBF</span></div>
-          <div class="model-param"><span>C (Regularization)</span><span>1.0</span></div>
-          <div class="model-param"><span>Gamma</span><span>Scale</span></div>
-          <div class="model-param"><span>Probability</span><span>Yes</span></div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="model-card">
-          <h5 class="text-success">🟢 ANN</h5>
-          <p class="text-muted" style="font-size:.8rem;">Artificial Neural Network</p>
-          <div class="model-param"><span>Hidden Layers</span><span>64 → 32</span></div>
-          <div class="model-param"><span>Activation</span><span>ReLU</span></div>
-          <div class="model-param"><span>Optimizer</span><span>Adam</span></div>
-          <div class="model-param"><span>Early Stopping</span><span>Yes</span></div>
-        </div>
+      <div class="col-12">
+        <h4 class="section-title mb-0">🤖 Model Training</h4>
+        <p class="section-sub">Models are trained in Google Colab and loaded automatically from <code>/models/</code>.</p>
       </div>
     </div>
-    <!-- Train button -->
-    <div class="text-center mb-4">
-      <button class="btn btn-primary btn-lg px-5" id="btn-train" onclick="trainModels()">
-        <i class="bi bi-cpu me-2"></i>Train All Models
-      </button>
-      <div id="train-spinner" class="mt-3 d-none">
-        <div class="spinner-border text-primary me-2" role="status"></div>
-        <span class="text-muted">Training in progress… this may take a few seconds.</span>
-      </div>
+
+    <!-- Status banner -->
+    <div id="model-status-banner" class="alert alert-secondary mb-4 d-flex align-items-center gap-2">
+      <div class="spinner-border spinner-border-sm text-secondary" role="status"></div>
+      <span>Checking model status…</span>
     </div>
-    <!-- Train results -->
-    <div id="train-results" class="d-none">
-      <div class="row g-3" id="train-metric-cards"></div>
+
+    <!-- Model status cards -->
+    <div class="row g-3 mb-4" id="model-status-cards"></div>
+
+    <!-- Colab Guide -->
+    <div class="card">
+      <div class="card-header"><i class="bi bi-book me-2"></i>How to Re-Train in Google Colab</div>
+      <div class="card-body">
+        <div class="row g-2">
+          <div class="col-md-2 col-4"><div class="workflow-step"><div class="step-num">1</div><div class="step-content"><h6>Open Colab</h6><p>Go to colab.research.google.com</p></div></div></div>
+          <div class="col-md-2 col-4"><div class="workflow-step"><div class="step-num">2</div><div class="step-content"><h6>Upload .ipynb</h6><p>Open student_performance_colab.ipynb</p></div></div></div>
+          <div class="col-md-2 col-4"><div class="workflow-step"><div class="step-num">3</div><div class="step-content"><h6>Upload CSV</h6><p>Upload student-mat.csv when prompted</p></div></div></div>
+          <div class="col-md-2 col-4"><div class="workflow-step"><div class="step-num">4</div><div class="step-content"><h6>Run All</h6><p>Runtime → Run all cells</p></div></div></div>
+          <div class="col-md-2 col-4"><div class="workflow-step"><div class="step-num">5</div><div class="step-content"><h6>Download</h6><p>4 .pkl files auto-download</p></div></div></div>
+          <div class="col-md-2 col-4"><div class="workflow-step"><div class="step-num">6</div><div class="step-content"><h6>Replace</h6><p>Move .pkl files to /models/ &amp; restart Flask</p></div></div></div>
+        </div>
+      </div>
     </div>
   </div>
 

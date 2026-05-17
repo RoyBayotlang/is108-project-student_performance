@@ -2,11 +2,14 @@
 app.py  –  IS 108 Student Performance Prediction
 Flask backend that:
   1. Loads & preprocesses student-mat.csv
-  2. Trains KNN, SVM, and ANN locally (or loads pre-trained .pkl from Colab)
+  2. Loads pre-trained .pkl models exported from Google Colab
   3. Exposes REST API endpoints consumed by the frontend
+
+Models are trained in Google Colab (student_performance_colab.ipynb)
+and placed in the /models/ directory before running this app.
 """
 
-import os, json, time
+import os, json
 import numpy  as np
 import pandas as pd
 import joblib
@@ -16,9 +19,6 @@ from flask_cors       import CORS
 
 from sklearn.preprocessing   import LabelEncoder, StandardScaler
 from sklearn.model_selection import train_test_split
-from sklearn.neighbors       import KNeighborsClassifier
-from sklearn.svm             import SVC
-from sklearn.neural_network  import MLPClassifier
 from sklearn.metrics         import (accuracy_score, precision_score,
                                      recall_score, f1_score, confusion_matrix)
 
@@ -140,61 +140,6 @@ def compute_metrics(model, X_test, y_test, name):
         'confusion_matrix': cm,
     }
 
-
-def train_all():
-    """Train KNN, SVM, ANN and store results."""
-    X_train = _state['X_train']
-    X_test  = _state['X_test']
-    y_train = _state['y_train']
-    y_test  = _state['y_test']
-
-    results = {}
-
-    # ── KNN ───────────────────────────────────────────────────────────────────
-    t0  = time.time()
-    knn = KNeighborsClassifier(n_neighbors=5, metric='euclidean')
-    knn.fit(X_train, y_train)
-    knn_time = round(time.time() - t0, 3)
-    _state['models']['KNN'] = knn
-    m = compute_metrics(knn, X_test, y_test, 'KNN')
-    m['train_time'] = knn_time
-    results['KNN'] = m
-    joblib.dump(knn, os.path.join(MODEL_DIR, 'knn_model.pkl'))
-
-    # ── SVM ───────────────────────────────────────────────────────────────────
-    t0  = time.time()
-    svm = SVC(kernel='rbf', C=1.0, gamma='scale', probability=True, random_state=42)
-    svm.fit(X_train, y_train)
-    svm_time = round(time.time() - t0, 3)
-    _state['models']['SVM'] = svm
-    m = compute_metrics(svm, X_test, y_test, 'SVM')
-    m['train_time'] = svm_time
-    results['SVM'] = m
-    joblib.dump(svm, os.path.join(MODEL_DIR, 'svm_model.pkl'))
-
-    # ── ANN ───────────────────────────────────────────────────────────────────
-    t0  = time.time()
-    ann = MLPClassifier(
-        hidden_layer_sizes=(64, 32),
-        activation='relu',
-        solver='adam',
-        max_iter=500,
-        early_stopping=True,
-        random_state=42
-    )
-    ann.fit(X_train, y_train)
-    ann_time = round(time.time() - t0, 3)
-    _state['models']['ANN'] = ann
-    m = compute_metrics(ann, X_test, y_test, 'ANN')
-    m['train_time'] = ann_time
-    results['ANN'] = m
-    joblib.dump(ann, os.path.join(MODEL_DIR, 'ann_model.pkl'))
-
-    # Save scaler too
-    joblib.dump(_state['scaler'], os.path.join(MODEL_DIR, 'scaler.pkl'))
-
-    _state['metrics'] = results
-    return results
 
 
 def load_pretrained_models():
@@ -327,15 +272,34 @@ def api_preprocess():
     })
 
 
-# ── Training ──────────────────────────────────────────────────────────────────
+# ── Model Status ──────────────────────────────────────────────────────────────
 
-@app.route('/api/train', methods=['POST'])
-def api_train():
-    """Train all three models locally and return metrics."""
-    if _state['X_train'] is None:
-        return jsonify({'error': 'Dataset not preprocessed yet'}), 400
-    results = train_all()
-    return jsonify({'message': 'Training complete', 'metrics': results})
+@app.route('/api/model-status', methods=['GET'])
+def api_model_status():
+    """Return which models are currently loaded and their metrics."""
+    model_files = {
+        'KNN': 'knn_model.pkl',
+        'SVM': 'svm_model.pkl',
+        'ANN': 'ann_model.pkl',
+    }
+    status = {}
+    for name, fname in model_files.items():
+        path = os.path.join(MODEL_DIR, fname)
+        loaded = name in _state['models']
+        file_exists = os.path.exists(path)
+        size = os.path.getsize(path) if file_exists else 0
+        status[name] = {
+            'loaded'     : loaded,
+            'file_exists': file_exists,
+            'file_size'  : size,
+            'metrics'    : _state['metrics'].get(name),
+        }
+    scaler_path = os.path.join(MODEL_DIR, 'scaler.pkl')
+    return jsonify({
+        'models'      : status,
+        'scaler_ready': os.path.exists(scaler_path),
+        'all_loaded'  : len(_state['models']) == 3,
+    })
 
 
 # ── Evaluation ────────────────────────────────────────────────────────────────

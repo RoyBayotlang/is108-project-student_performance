@@ -165,52 +165,69 @@ async function loadPreprocess() {
 }
 
 // ─────────────────────────────────────────────────────────────────
-//  TRAINING
+//  TRAINING – Model Status (loaded from Colab)
 // ─────────────────────────────────────────────────────────────────
-async function trainModels() {
-  const btn     = document.getElementById('btn-train');
-  const spinner = document.getElementById('train-spinner');
-  const results = document.getElementById('train-results');
-
-  btn.disabled = true;
-  spinner.classList.remove('d-none');
-  results.classList.add('d-none');
+async function loadModelStatus() {
+  const banner = document.getElementById('model-status-banner');
+  const cards  = document.getElementById('model-status-cards');
 
   try {
-    const data = await apiFetch('/api/train', { method: 'POST' });
-    renderTrainCards(data.metrics);
-    results.classList.remove('d-none');
+    const data = await apiFetch('/api/model-status');
+    const colors  = { KNN: 'primary', SVM: 'warning', ANN: 'success' };
+    const emojis  = { KNN: '🔵', SVM: '🟡', ANN: '🟢' };
+    const labels  = { KNN: 'K-Nearest Neighbors', SVM: 'Support Vector Machine', ANN: 'Artificial Neural Network' };
+    const params  = {
+      KNN: [['K Neighbors','5'],['Distance','Euclidean'],['Weights','Uniform']],
+      SVM: [['Kernel','RBF'],['C (Regularization)','1.0'],['Gamma','Scale'],['Probability','Yes']],
+      ANN: [['Hidden Layers','64 → 32'],['Activation','ReLU'],['Optimizer','Adam'],['Early Stopping','Yes']],
+    };
+
+    // Banner
+    if (data.all_loaded) {
+      banner.className = 'alert alert-success mb-4 d-flex align-items-center gap-2';
+      banner.innerHTML = '<i class="bi bi-check-circle-fill"></i><span><strong>All 3 models loaded</strong> from <code>/models/</code> — ready to evaluate and predict!</span>';
+    } else {
+      banner.className = 'alert alert-warning mb-4 d-flex align-items-center gap-2';
+      banner.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i><span><strong>Some models missing.</strong> Run the Colab notebook and place the <code>.pkl</code> files in <code>/models/</code>, then restart Flask.</span>';
+    }
+
+    // Per-model cards
+    cards.innerHTML = Object.entries(data.models).map(([name, info]) => {
+      const loaded = info.loaded;
+      const sizeKb = info.file_size ? (info.file_size / 1024).toFixed(1) : '—';
+      const acc    = info.metrics ? `${info.metrics.accuracy}%` : '—';
+      const paramRows = params[name].map(([k,v]) => `
+        <div class="d-flex justify-content-between py-1 border-bottom border-secondary">
+          <span class="text-muted" style="font-size:.8rem;">${k}</span>
+          <span style="font-size:.8rem;">${v}</span>
+        </div>`).join('');
+      return `
+        <div class="col-md-4">
+          <div class="model-card ${loaded ? '' : 'opacity-50'}">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <h5 class="mb-0 text-${colors[name]}">${emojis[name]} ${name}</h5>
+              <span class="badge ${loaded ? 'bg-success' : 'bg-secondary'}">
+                <i class="bi bi-${loaded ? 'check-circle' : 'x-circle'} me-1"></i>${loaded ? 'Loaded' : 'Missing'}
+              </span>
+            </div>
+            <p class="text-muted mb-2" style="font-size:.78rem;">${labels[name]}</p>
+            ${paramRows}
+            <div class="d-flex justify-content-between py-1 border-bottom border-secondary">
+              <span class="text-muted" style="font-size:.8rem;">File Size</span>
+              <span style="font-size:.8rem;">${sizeKb} KB</span>
+            </div>
+            <div class="d-flex justify-content-between py-1">
+              <span class="text-muted" style="font-size:.8rem;">Accuracy</span>
+              <span class="fw-bold text-${colors[name]}" style="font-size:.8rem;">${acc}</span>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
   } catch (e) {
-    alert('Training error: ' + e.message);
-  } finally {
-    btn.disabled = false;
-    spinner.classList.add('d-none');
+    banner.className = 'alert alert-danger mb-4';
+    banner.innerHTML = `<i class="bi bi-exclamation-triangle me-2"></i>Error checking model status: ${e.message}`;
   }
-}
-
-function renderTrainCards(metrics) {
-  const colors = { KNN: 'primary', SVM: 'warning', ANN: 'success' };
-  const emojis = { KNN: '🔵', SVM: '🟡', ANN: '🟢' };
-  const container = document.getElementById('train-metric-cards');
-
-  container.innerHTML = Object.entries(metrics).map(([name, m]) => `
-    <div class="col-md-4">
-      <div class="card p-3">
-        <h5 class="text-${colors[name]}">${emojis[name]} ${name}</h5>
-        <div class="d-flex justify-content-between py-1 border-bottom border-secondary">
-          <span class="text-muted" style="font-size:.82rem;">Accuracy</span>
-          <span class="fw-bold text-${colors[name]}">${m.accuracy}%</span>
-        </div>
-        <div class="d-flex justify-content-between py-1 border-bottom border-secondary">
-          <span class="text-muted" style="font-size:.82rem;">F1 Score</span>
-          <span style="font-size:.82rem;">${m.f1}%</span>
-        </div>
-        <div class="d-flex justify-content-between py-1">
-          <span class="text-muted" style="font-size:.82rem;">Train Time</span>
-          <span style="font-size:.82rem;">${m.train_time}s</span>
-        </div>
-      </div>
-    </div>`).join('');
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -375,6 +392,7 @@ document.querySelectorAll('a[data-bs-toggle="tab"]').forEach(tab => {
 
     if (target === '#pane-dataset')    loadDataset();
     if (target === '#pane-preprocess') loadPreprocess();
+    if (target === '#pane-train')      loadModelStatus();
     if (target === '#pane-evaluate')   loadEvaluation();
   });
 });
