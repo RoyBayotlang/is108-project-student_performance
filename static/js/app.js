@@ -11,6 +11,38 @@ function destroyChart(id) {
   if (charts[id]) { charts[id].destroy(); delete charts[id]; }
 }
 
+// ── Theme helpers ─────────────────────────────────────────────────
+function getCSSVar(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+function chartColors() {
+  return { tick: getCSSVar('--chart-tick'), grid: getCSSVar('--chart-grid') };
+}
+
+// ── Dark / Light mode toggle ──────────────────────────────────────
+(function initTheme() {
+  const saved = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.getElementById('theme-toggle').textContent = saved === 'dark' ? '☀️' : '🌙';
+})();
+
+document.getElementById('theme-toggle').addEventListener('click', () => {
+  const html    = document.documentElement;
+  const isDark  = html.getAttribute('data-theme') === 'dark';
+  const next    = isDark ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  document.getElementById('theme-toggle').textContent = next === 'dark' ? '☀️' : '🌙';
+
+  // Re-render all visible charts so they pick up new colours
+  const active = document.querySelector('.tab-pane.active');
+  if (!active) return;
+  const id = active.id;
+  if (id === 'pane-dashboard')   loadDashboard();
+  if (id === 'pane-preprocess')  loadPreprocess();
+  if (id === 'pane-evaluate')    loadEvaluation();
+});
+
 // ── Fetch helper ─────────────────────────────────────────────────
 async function apiFetch(url, opts = {}) {
   const res = await fetch(url, opts);
@@ -48,7 +80,7 @@ async function loadDashboard() {
       options: {
         responsive: true, maintainAspectRatio: true,
         plugins: {
-          legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 12 } } },
+          legend: { position: 'bottom', labels: { color: chartColors().tick, font: { size: 12 } } },
           tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw} students` } }
         },
         cutout: '65%'
@@ -84,8 +116,8 @@ async function loadG3Chart() {
         responsive: true, maintainAspectRatio: false,
         plugins: { legend: { display: false }, tooltip: { callbacks: { title: ctx => `G3 = ${ctx[0].label}`, label: ctx => ` ${ctx.raw} students` } } },
         scales: {
-          x: { grid: { color: 'rgba(255,255,255,.06)' }, ticks: { color: '#94a3b8' }, title: { display: true, text: 'Final Grade (G3)', color: '#94a3b8' } },
-          y: { grid: { color: 'rgba(255,255,255,.06)' }, ticks: { color: '#94a3b8' }, title: { display: true, text: 'Count', color: '#94a3b8' } }
+          x: { grid: { color: chartColors().grid }, ticks: { color: chartColors().tick }, title: { display: true, text: 'Final Grade (G3)', color: chartColors().tick } },
+          y: { grid: { color: chartColors().grid }, ticks: { color: chartColors().tick }, title: { display: true, text: 'Count',           color: chartColors().tick } }
         }
       }
     });
@@ -156,7 +188,7 @@ async function loadPreprocess() {
       },
       options: {
         responsive: true, maintainAspectRatio: true,
-        plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 12 } } } },
+        plugins: { legend: { position: 'bottom', labels: { color: chartColors().tick, font: { size: 12 } } } },
         cutout: '60%'
       }
     });
@@ -266,10 +298,10 @@ function renderCompareChart(metrics) {
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: '#94a3b8' } } },
+      plugins: { legend: { labels: { color: chartColors().tick } } },
       scales: {
-        x: { grid: { color: 'rgba(255,255,255,.06)' }, ticks: { color: '#94a3b8' } },
-        y: { min: 0, max: 100, grid: { color: 'rgba(255,255,255,.06)' }, ticks: { color: '#94a3b8', callback: v => v + '%' } }
+        x: { grid: { color: chartColors().grid }, ticks: { color: chartColors().tick } },
+        y: { min: 0, max: 100, grid: { color: chartColors().grid }, ticks: { color: chartColors().tick, callback: v => v + '%' } }
       }
     }
   });

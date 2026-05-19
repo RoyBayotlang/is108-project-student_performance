@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -20,7 +20,10 @@
 <!-- ── Navbar ───────────────────────────────────────────────────────────────── -->
 <nav class="navbar navbar-expand-lg px-4 py-2">
   <span class="navbar-brand"><i class="bi bi-mortarboard-fill me-2"></i>Student<span>Predict</span></span>
-  <span class="ms-auto text-muted" style="font-size:0.78rem;">IS 108 · Intelligence System Final Project</span>
+  <div class="ms-auto d-flex align-items-center gap-3">
+    <span class="text-muted" style="font-size:0.78rem;">IS 108 · Intelligence System Final Project</span>
+    <button id="theme-toggle" title="Toggle dark / light mode">🌙</button>
+  </div>
 </nav>
 
 <!-- ── Tabs ─────────────────────────────────────────────────────────────────── -->
@@ -46,13 +49,13 @@
         <div class="stat-card"><div class="stat-icon bg-primary bg-opacity-10 text-primary"><i class="bi bi-people"></i></div><div><div class="stat-value" id="d-total">—</div><div class="stat-label">Total Students</div></div></div>
       </div>
       <div class="col-6 col-md-3">
-        <div class="stat-card"><div class="stat-icon" style="background:rgba(16,185,129,.15);color:#10b981"><i class="bi bi-check-circle"></i></div><div><div class="stat-value text-success" id="d-pass">—</div><div class="stat-label">Pass (G3 ≥ 10)</div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:#d1fae5;color:#059669"><i class="bi bi-check-circle"></i></div><div><div class="stat-value text-success" id="d-pass">—</div><div class="stat-label">Pass (G3 ≥ 10)</div></div></div>
       </div>
       <div class="col-6 col-md-3">
-        <div class="stat-card"><div class="stat-icon" style="background:rgba(239,68,68,.15);color:#ef4444"><i class="bi bi-x-circle"></i></div><div><div class="stat-value text-danger" id="d-fail">—</div><div class="stat-label">Fail (G3 &lt; 10)</div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:#fee2e2;color:#dc2626"><i class="bi bi-x-circle"></i></div><div><div class="stat-value text-danger" id="d-fail">—</div><div class="stat-label">Fail (G3 &lt; 10)</div></div></div>
       </div>
       <div class="col-6 col-md-3">
-        <div class="stat-card"><div class="stat-icon" style="background:rgba(245,158,11,.15);color:#f59e0b"><i class="bi bi-journal-text"></i></div><div><div class="stat-value" id="d-features">32</div><div class="stat-label">Features</div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:#fef3c7;color:#d97706"><i class="bi bi-journal-text"></i></div><div><div class="stat-value" id="d-features">32</div><div class="stat-label">Features</div></div></div>
       </div>
     </div>
 
@@ -77,20 +80,6 @@
       </div>
     </div>
 
-    <!-- Workflow -->
-    <div class="card">
-      <div class="card-header"><i class="bi bi-diagram-3 me-2"></i>Project Workflow</div>
-      <div class="card-body">
-        <div class="row g-2">
-          <div class="col-md-2 col-4"><div class="workflow-step"><div class="step-num">1</div><div class="step-content"><h6>Dataset</h6><p>Load student-mat.csv</p></div></div></div>
-          <div class="col-md-2 col-4"><div class="workflow-step"><div class="step-num">2</div><div class="step-content"><h6>Preprocess</h6><p>Encode, scale, split</p></div></div></div>
-          <div class="col-md-2 col-4"><div class="workflow-step"><div class="step-num">3</div><div class="step-content"><h6>Train</h6><p>KNN · SVM · ANN</p></div></div></div>
-          <div class="col-md-2 col-4"><div class="workflow-step"><div class="step-num">4</div><div class="step-content"><h6>Evaluate</h6><p>Accuracy, F1, CM</p></div></div></div>
-          <div class="col-md-2 col-4"><div class="workflow-step"><div class="step-num">5</div><div class="step-content"><h6>Predict</h6><p>Input → Pass/Fail</p></div></div></div>
-          <div class="col-md-2 col-4"><div class="workflow-step"><div class="step-num">6</div><div class="step-content"><h6>Compare</h6><p>Best model choice</p></div></div></div>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- ── DATASET ─────────────────────────────────────────────────────────────── -->
@@ -101,9 +90,9 @@
     <!-- Info row -->
     <div class="row g-3 mb-3" id="ds-info-row">
       <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-icon bg-primary bg-opacity-10 text-primary"><i class="bi bi-database"></i></div><div><div class="stat-value" id="ds-rows">—</div><div class="stat-label">Total Rows</div></div></div></div>
-      <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-icon" style="background:rgba(245,158,11,.15);color:#f59e0b"><i class="bi bi-grid-3x3"></i></div><div><div class="stat-value" id="ds-cols">—</div><div class="stat-label">Columns</div></div></div></div>
-      <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-icon" style="background:rgba(16,185,129,.15);color:#10b981"><i class="bi bi-check-all"></i></div><div><div class="stat-value text-success" id="ds-missing">0</div><div class="stat-label">Missing Values</div></div></div></div>
-      <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-icon" style="background:rgba(239,68,68,.15);color:#ef4444"><i class="bi bi-bullseye"></i></div><div><div class="stat-value" id="ds-g3mean">—</div><div class="stat-label">Avg Final Grade (G3)</div></div></div></div>
+      <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-icon" style="background:#fef3c7;color:#d97706"><i class="bi bi-grid-3x3"></i></div><div><div class="stat-value" id="ds-cols">—</div><div class="stat-label">Columns</div></div></div></div>
+      <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-icon" style="background:#d1fae5;color:#059669"><i class="bi bi-check-all"></i></div><div><div class="stat-value text-success" id="ds-missing">0</div><div class="stat-label">Missing Values</div></div></div></div>
+      <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-icon" style="background:#fee2e2;color:#dc2626"><i class="bi bi-bullseye"></i></div><div><div class="stat-value" id="ds-g3mean">—</div><div class="stat-label">Avg Final Grade (G3)</div></div></div></div>
     </div>
     <!-- Table -->
     <div class="card">
@@ -166,7 +155,6 @@
     <div class="row g-3 mb-4">
       <div class="col-12">
         <h4 class="section-title mb-0">🤖 Model Training</h4>
-        <p class="section-sub">Models are trained in Google Colab and loaded automatically from <code>/models/</code>.</p>
       </div>
     </div>
 
@@ -179,20 +167,6 @@
     <!-- Model status cards -->
     <div class="row g-3 mb-4" id="model-status-cards"></div>
 
-    <!-- Colab Guide -->
-    <div class="card">
-      <div class="card-header"><i class="bi bi-book me-2"></i>How to Re-Train in Google Colab</div>
-      <div class="card-body">
-        <div class="row g-2">
-          <div class="col-md-2 col-4"><div class="workflow-step"><div class="step-num">1</div><div class="step-content"><h6>Open Colab</h6><p>Go to colab.research.google.com</p></div></div></div>
-          <div class="col-md-2 col-4"><div class="workflow-step"><div class="step-num">2</div><div class="step-content"><h6>Upload .ipynb</h6><p>Open student_performance_colab.ipynb</p></div></div></div>
-          <div class="col-md-2 col-4"><div class="workflow-step"><div class="step-num">3</div><div class="step-content"><h6>Upload CSV</h6><p>Upload student-mat.csv when prompted</p></div></div></div>
-          <div class="col-md-2 col-4"><div class="workflow-step"><div class="step-num">4</div><div class="step-content"><h6>Run All</h6><p>Runtime → Run all cells</p></div></div></div>
-          <div class="col-md-2 col-4"><div class="workflow-step"><div class="step-num">5</div><div class="step-content"><h6>Download</h6><p>4 .pkl files auto-download</p></div></div></div>
-          <div class="col-md-2 col-4"><div class="workflow-step"><div class="step-num">6</div><div class="step-content"><h6>Replace</h6><p>Move .pkl files to /models/ &amp; restart Flask</p></div></div></div>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- ── EVALUATION ──────────────────────────────────────────────────────────── -->
