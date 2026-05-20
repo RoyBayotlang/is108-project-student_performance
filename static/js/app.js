@@ -217,10 +217,10 @@ async function loadModelStatus() {
     // Banner
     if (data.all_loaded) {
       banner.className = 'alert alert-success mb-4 d-flex align-items-center gap-2';
-      banner.innerHTML = '<i class="bi bi-check-circle-fill"></i><span><strong>All 3 models loaded</strong> from <code>/models/</code> — ready to evaluate and predict!</span>';
+      banner.innerHTML = '<i class="bi bi-check-circle-fill"></i><span><strong>All 3 models loaded</strong> and ready to evaluate and predict!</span>';
     } else {
       banner.className = 'alert alert-warning mb-4 d-flex align-items-center gap-2';
-      banner.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i><span><strong>Some models missing.</strong> Run the Colab notebook and place the <code>.pkl</code> files in <code>/models/</code>, then restart Flask.</span>';
+      banner.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i><span><strong>Some models missing.</strong> Please ensure all pre-trained model files are loaded, then restart the application.</span>';
     }
 
     // Per-model cards
